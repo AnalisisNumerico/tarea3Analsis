@@ -1,7 +1,11 @@
-cmake_minimum_required(VERSION 3.8)
-project(tarea3AnalsisGabriel)
+cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp)
-add_executable(tarea3Analsis ${SOURCE_FILES})
+project(tarea03 VERSION 0.0.0 LANGUAGES CXX)
+
+
+add_subdirectory (src)
+
+enable_testing ()
+add_subdirectory (test)
+add_subdirectory(benchmarks)
