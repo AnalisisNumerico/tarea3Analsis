@@ -35,13 +35,9 @@ namespace anpi {
   template<typename T>
   T rootBisection(const std::function<T(T)>& funct,T xl,T xu,const T eps) {
 
-    // TODO: Put your code in here!
-
     // Return NaN if no root was found
     return std::numeric_limits<T>::quiet_NaN();
   }
 
 }
-  
 #endif
-
