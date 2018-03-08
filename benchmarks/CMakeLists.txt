@@ -27,7 +27,7 @@ endif()
 
 file(GLOB BM_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp *.hpp)
 
-add_executable (benchmark ${BM_SRCS})
+add_executable (benchmark ${BM_SRCS} benchmarkRootFinders.cpp)
 target_link_libraries (benchmark
                        anpi
                        python2.7

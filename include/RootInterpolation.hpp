@@ -18,11 +18,6 @@
 #define ANPI_ROOT_INTERPOLATION_HPP
 
 
-#include <iostream>
-#include <string>
-#include <sstream>
-using namespace std;
-
 namespace anpi {
 
     /**
@@ -40,13 +35,18 @@ namespace anpi {
      */
     template<typename T>
     T rootInterpolation(const std::function<T(T)>& funct,T xl,T xu,const T eps) {
+
         T xr=xl;
         T fl = funct(xl);
         T fu = funct(xu);
-        cout << fl << endl;
-        cout << fu << endl;
         T ea=T ( );
         int iu (0), il (0);
+
+        if(xl>xu || fl * fu >= 0){
+            throw anpi::Exception("received invalid values");
+        }
+
+
         for(int i =std::numeric_limits<T>::digits; i > 0; --i) {
             T xrold(xr);
             xr=xu - fu * (xl-xu)/(fl - fu);

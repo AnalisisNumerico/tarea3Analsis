@@ -69,7 +69,7 @@ namespace anpi {
         }
 
         try {
-          solver(t3<T>,T(0),T(2),eps);
+          solver(t3<T>,T(1),T(2),eps);
           BOOST_CHECK(false && "solver should catch unenclosed root");
         } catch(Exception exc ) {
           BOOST_CHECK(true && "successfully catched");
@@ -108,8 +108,8 @@ BOOST_AUTO_TEST_SUITE( RootFinder )
 
 BOOST_AUTO_TEST_CASE(Bisection) 
 {
-  //anpi::test::rootTest<float>(anpi::rootBisection<float>);
-  //anpi::test::rootTest<double>(anpi::rootBisection<double>);
+  anpi::test::rootTest<float>(anpi::rootBisection<float>);
+  anpi::test::rootTest<double>(anpi::rootBisection<double>);
 }
 
 BOOST_AUTO_TEST_CASE(Interpolation) 
@@ -120,10 +120,10 @@ BOOST_AUTO_TEST_CASE(Interpolation)
 
 BOOST_AUTO_TEST_CASE(Secant) 
 {
-  //anpi::test::rootTest<float>(anpi::rootSecant<float>,
-  //                            anpi::test::DoNotTestInterval);
-  //anpi::test::rootTest<double>(anpi::rootSecant<double>,
-  //                             anpi::test::DoNotTestInterval);
+  anpi::test::rootTest<float>(anpi::rootSecant<float>,
+                              anpi::test::DoNotTestInterval);
+  anpi::test::rootTest<double>(anpi::rootSecant<double>,
+                               anpi::test::DoNotTestInterval);
 }
 
 BOOST_AUTO_TEST_CASE(NewtonRaphson) 
