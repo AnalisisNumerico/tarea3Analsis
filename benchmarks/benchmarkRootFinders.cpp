@@ -116,12 +116,6 @@ namespace anpi {
             plot2d.plot(pEjeError,pEje2,"2","r");
             plot2d.plot(pEjeError,pEje3,"3","b");
 
-
-/*
-            plot2d.plot(pEje1,pEjeError,"F1","g");
-            plot2d.plot(pEje2,pEjeError, "F2","r");
-            plot2d.plot(pEje3,pEjeError, "F3","b");
-*/
             plot2d.show();
 
         }
@@ -134,17 +128,15 @@ namespace anpi {
                                             T,
                                             const T)>& solver, std::string pMetodo) {
 
-            std::vector<T> _F1Llamadas;
-            std::vector<T> _F2Llamadas;
-            std::vector<T> _F3Llamadas;
             std::vector<T> _error;
-
             Encapsuladora<T> EncapsuladoraF1(t1<T>);
-            Encapsuladora<T> EncapsuladoraF2(t2<T>);
-            Encapsuladora<T> EncapsuladoraF3(t3<T>);
-
+            std::vector<T> _F1Llamadas;
             std::function<T(const T)> capsulaF1 = EncapsuladoraF1;
+            Encapsuladora<T> EncapsuladoraF2(t2<T>);
+            std::vector<T> _F2Llamadas;
             std::function<T(const T)> capsulaF2 = EncapsuladoraF2;
+            Encapsuladora<T> EncapsuladoraF3(t3<T>);
+            std::vector<T> _F3Llamadas;
             std::function<T(const T)> capsulaF3 = EncapsuladoraF3;
 
             for (T eps=T(1)/T(10); eps>static_cast<T>(1.0e-7); eps/=T(2)) {
@@ -159,7 +151,7 @@ namespace anpi {
                 _F2Llamadas.push_back(llamadas);
 
                 sol = solver(capsulaF3,T(0),T(0.5),eps);
-                llamadas = T(capsulaF2.template target<Encapsuladora<T>>()->getCuenta());
+                llamadas = T(capsulaF3.template target<Encapsuladora<T>>()->getCuenta());
                 BOOST_CHECK(0 < llamadas);
                 _F3Llamadas.push_back(llamadas);
 
@@ -172,34 +164,33 @@ namespace anpi {
         /// measure the given open root finder
         template<typename T>
         void benchTest(const std::function<T(const std::function<T(T)>&,
-                                            T,
+                                             T,
                                             const T)>& solver, std::string pMetodo) {
 
-            std::vector<T> _F1Llamadas;
-            std::vector<T> _F2Llamadas;
-            std::vector<T> _F3Llamadas;
             std::vector<T> _error;
 
             Encapsuladora<T> EncapsuladoraF1(t1<T>);
-            Encapsuladora<T> EncapsuladoraF2(t2<T>);
-            Encapsuladora<T> EncapsuladoraF3(t3<T>);
-
+            std::vector<T> _F1Llamadas;
             std::function<T(const T)> capsulaF1 = EncapsuladoraF1;
+            Encapsuladora<T> EncapsuladoraF2(t2<T>);
+            std::vector<T> _F2Llamadas;
             std::function<T(const T)> capsulaF2 = EncapsuladoraF2;
+            Encapsuladora<T> EncapsuladoraF3(t3<T>);
+            std::vector<T> _F3Llamadas;
             std::function<T(const T)> capsulaF3 = EncapsuladoraF3;
 
             for (T eps=T(1)/T(10); eps>static_cast<T>(1.0e-7); eps/=T(2)) {
-                T sol = solver(t1<T>,T(0),eps);
+                T sol = solver(capsulaF1,T(0),eps);
                 T llamadas = T(capsulaF1.template target<Encapsuladora<T>>()->getCuenta());
                 BOOST_CHECK(0 < llamadas);
                 _F1Llamadas.push_back(llamadas);
 
-                sol = solver(t2<T>,T(2),eps);
+                sol = solver(capsulaF2,T(2),eps);
                 llamadas = T(capsulaF2.template target<Encapsuladora<T>>()->getCuenta());
                 BOOST_CHECK(0 < llamadas);
                 _F2Llamadas.push_back(llamadas);
 
-                sol = solver(t3<T>,T(0),eps);
+                sol = solver(capsulaF3,T(0),eps);
                 llamadas = T(capsulaF3.template target<Encapsuladora<T>>()->getCuenta());
                 BOOST_CHECK(0 < llamadas);
                 _F3Llamadas.push_back(llamadas);
@@ -208,7 +199,7 @@ namespace anpi {
             }
             bench::grafica(pMetodo, _error, _F1Llamadas,_F2Llamadas,_F3Llamadas);
         }
-    } // test
+    } // bench
 }  // anpi
 
 

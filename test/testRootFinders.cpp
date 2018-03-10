@@ -77,7 +77,7 @@ namespace anpi {
         }
       }
 
-      for (T eps=static_cast<T>(1.0e-5); eps>static_cast<T>(1.0e-7); eps/=T(10)) {
+      for (T eps=T(1)/T(10); eps>static_cast<T>(1.0e-7); eps/=T(10)) {
           T sol = solver(t1<T>, T(0), T(2), eps);
           BOOST_CHECK(std::abs(t1<T>(sol)) < eps);
           sol = solver(t2<T>, T(0), T(2), eps);
