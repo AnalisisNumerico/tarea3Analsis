@@ -31,11 +31,11 @@ namespace anpi {
    */
   template<typename T>
   T rootSecant(const std::function<T(T)>& funct,T xi,T xii,const T eps) {
-      void nrerror(char error_text[]);
       T fl,f,dx,swap,xl,rts;
       fl=funct(xi);
       f=funct(xii);
-      if (fabs(fl) < fabs(f)) {
+      if (fabs(fl) < fabs(f)) { //Pick  the  bound  with  the  smaller  function  value  as
+                                // the  most  recent  guess.
         rts=xi;
         xl=xii;
         swap=fl;
@@ -45,14 +45,15 @@ namespace anpi {
         xl=xi;
         rts=xii;
       }
-      for (int j=1;j<=std::numeric_limits<T>::digits;j++) {
+      for (int j=1;j<=std::numeric_limits<T>::digits;j++) { //Secant  loop.
+                                                            // Increment  with  respect  to  latest  value.
                 dx=(xl-rts)*f/(f-fl);
                 xl=rts;
         fl=f;
         rts += dx;
         f=funct(rts);
         if (fabs(dx) < eps || f == 0.0){
-          return rts;
+          return rts;                                       //Convergencia
         }
       }
     

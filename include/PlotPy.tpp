@@ -40,7 +40,7 @@ namespace anpi {
   template <typename T>
   void Plot2d<T>::setXLabel(const std::string& xlabel){
     _xlabel = xlabel;
-    std::string strxlabel = "plt.xlabel('"+ _ylabel +"')";
+    std::string strxlabel = "plt.xlabel('"+ _xlabel +"')";
     PyRun_SimpleString(strxlabel.c_str());
   }
   

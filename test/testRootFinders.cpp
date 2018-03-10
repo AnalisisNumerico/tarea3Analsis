@@ -20,6 +20,7 @@
 #include <exception>
 #include <cstdlib>
 #include <complex>
+#include <iostream>
 
 #include <functional>
 
@@ -48,7 +49,7 @@ namespace anpi {
       TestInterval,
       DoNotTestInterval
     };
-    
+
     /// Test the given closed root finder
     template<typename T>
     void rootTest(const std::function<T(const std::function<T(T)>&,
@@ -76,11 +77,11 @@ namespace anpi {
         }
       }
 
-      for (T eps=T(1)/T(10); eps>static_cast<T>(1.0e-7); eps/=T(10)) {
-        T sol = solver(t1<T>,T(0),T(2),eps);
-        BOOST_CHECK(std::abs(t1<T>(sol))<eps);
-        sol = solver(t2<T>,T(0),T(2),eps);
-        BOOST_CHECK(std::abs(t2<T>(sol))<eps);
+      for (T eps=static_cast<T>(1.0e-5); eps>static_cast<T>(1.0e-7); eps/=T(10)) {
+          T sol = solver(t1<T>, T(0), T(2), eps);
+          BOOST_CHECK(std::abs(t1<T>(sol)) < eps);
+          sol = solver(t2<T>, T(0), T(2), eps);
+          BOOST_CHECK(std::abs(t2<T>(sol))<eps);
         sol = solver(t3<T>,T(0),T(0.5),eps);
         BOOST_CHECK(std::abs(t3<T>(sol))<eps);
       }
@@ -88,7 +89,7 @@ namespace anpi {
 
     /// Test the given open root finder
     template<typename T>
-    void rootTest1(const std::function<T(const std::function<T(T)>&,
+    void rootTest(const std::function<T(const std::function<T(T)>&,
                                   T,
                                   const T)>& solver) {
 

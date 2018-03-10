@@ -24,6 +24,7 @@
 #include "Matrix.hpp"
 #include "Allocator.hpp"
 
+/*
 BOOST_AUTO_TEST_SUITE( Matrix )
 
 /// Benchmark for addition operations
@@ -113,9 +114,7 @@ public:
   }
 };
 
-/**
- * Instantiate and test the methods of the Matrix class
- */
+
 BOOST_AUTO_TEST_CASE( Add ) {
 
   std::vector<size_t> sizes = {  24,  32,  48,  64,
@@ -194,3 +193,4 @@ BOOST_AUTO_TEST_CASE( Add ) {
 }
   
 BOOST_AUTO_TEST_SUITE_END()
+*/
