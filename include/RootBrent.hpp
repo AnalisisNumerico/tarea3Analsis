@@ -17,7 +17,10 @@
 #ifndef ANPI_ROOT_BRENT_HPP
 #define ANPI_ROOT_BRENT_HPP
 
+
+
 namespace anpi {
+
 
     /**
      * Find the roots of the function funct looking for it in the
@@ -32,64 +35,81 @@ namespace anpi {
      * @throws anpi::Exception if inteval is reversed or both extremes
      *         have same sign.
      */
+    template <typename T>
+    int sgn(T val) {
+      return (T(0) < val) - (val < T(0));
+    }
     template<typename T>
     T rootBrent(const std::function<T(T)>& funct,T xl,T xu,const T eps) {
 
-      T raizA = xl;
-      T raizB = xu;
 
-      T fA = funct(raizA);
-      T fB = funct(raizB);
-      if(fA * fB >= 0) {
-        return std::numeric_limits<T>::quiet_NaN();
+
+      T a=xl,b=xu,c=xu,d,e,min1,min2;
+      T fa=funct(a),fb=funct(b),fc,p,q,r,s,tol1,xm;
+
+      if(xl>xu || fa * fb > 0){
+        throw anpi::Exception("received invalid values");
       }
-      if(abs(fA) < abs(fB)) {
-        T temp = raizA;
-        raizA = raizB;
-        raizB = temp;
-      }
-      T raizC = raizA;
-      T raizD;
-      T raizS;
-      bool mflag = true;
-      while((funct(raizB) != 0) && (funct(raizS) !=0) && (abs(raizB - raizA) >= eps)) {
-        if((funct(raizA) != funct(raizC)) && (funct(raizB) != funct(raizC))) {
-          raizS = ((raizA * funct(raizB) * funct(raizC))/((funct(raizA) - funct(raizB)) * (funct(raizA) - funct(raizC)))) +
-                  ((raizB * funct(raizA) * funct(raizC))/((funct(raizB) - funct(raizA)) * (funct(raizB) - funct(raizC)))) +
-                  ((raizC * funct(raizA) * funct(raizB))/((funct(raizC) - funct(raizA)) * (funct(raizC) - funct(raizB))));
+
+      if ((fa > 0.0 && fb > 0.0) || (fa < 0.0 && fb < 0.0))
+        throw anpi::Exception("received invalid values");
+      fc=fb;
+      for (int iter=1;iter<=std::numeric_limits<T>::digits;iter++) {
+        if ((fb > 0.0 && fc > 0.0) || (fb < 0.0 && fc < 0.0)) {
+          c=a;
+          fc=fa;
+          e=d=b-a;
         }
-        else {
-          raizS = raizB - (funct(raizB) * ((raizB - raizA)/(funct(raizB) - funct(raizA))));
+        if (fabs(fc) < fabs(fb)) {
+          a=b;
+          b=c;
+          c=a;
+          fa=fb;
+          fb=fc;
+          fc=fa;
         }
-        if(!((((3*raizA + raizB)/(4)) <= raizS) && (raizS <= raizB)) ||
-           (mflag && (abs(raizS - raizB) >= abs(raizB - raizC)/2)) ||
-           (!mflag && (abs(raizS - raizB) >= abs(raizC - raizD)/2)) ||
-           (mflag && (abs(raizB - raizC) < abs(eps))) ||
-           (!mflag && (abs(raizC - raizD) < abs(eps)))) {
-          raizS = (raizA + raizB) / 2;
-          mflag = true;
+        tol1=2.0*eps*fabs(b)+0.5*eps;
+                xm=0.5*(c-b);
+        if (fabs(xm) <= tol1 || fb == 0.0) return b;
+        if (fabs(e) >= tol1 && fabs(fa) > fabs(fb)) {
+          s=fb/fa;
+          if (a == c) {
+            p=2.0*xm*s;
+            q=1.0-s;
+          } else {
+            q=fa/fc;
+            r=fb/fc;
+            p=s*(2.0*xm*q*(q-r)-(b-a)*(r-1.0));
+            q=(q-1.0)*(r-1.0)*(s-1.0);
+          }
+          if (p > 0.0) q = -q;
+          p=fabs(p);
+          min1=3.0*xm*q-fabs(tol1*q);
+          min2=fabs(e*q);
+          if (2.0*p < (min1 < min2 ? min1 : min2)) {
+            e=d;
+            d=p/q;
+          } else {
+            d=xm;
+            e=d;
+          }
+        } else {
+          d=xm;
+          e=d;
         }
-        else {
-          mflag = false;
-        }
-        raizD = raizC;
-        raizC  = raizB;
-        if((funct(raizA) * funct(raizS)) < 0) {
-          raizB = raizS;
-        }
-        else {
-          raizA = raizS;
-        }
-        if(abs(fA) < abs(fB)) {
-          T temp = raizA;
-          raizA = raizB;
-          raizB = temp;
-        }
+        a=b;
+        fa=fb;
+        if (fabs(d) > tol1)
+                b+=d;
+        else
+        b += tol1*sgn(xm);
+        fb=funct(b);
       }
 
       // Return NaN if no root was found
-      return raizB;
+      return std::numeric_limits<T>::quiet_NaN();
     }
 }
+
 
 #endif

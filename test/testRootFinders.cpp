@@ -129,14 +129,14 @@ BOOST_AUTO_TEST_CASE(Secant)
 
 BOOST_AUTO_TEST_CASE(NewtonRaphson) 
 {
-  //anpi::test::rootTest<float>(anpi::rootNewtonRaphson<float>);
-  //anpi::test::rootTest<double>(anpi::rootNewtonRaphson<double>);
+  anpi::test::rootTest<float>(anpi::rootNewtonRaphson<float>);
+  anpi::test::rootTest<double>(anpi::rootNewtonRaphson<double>);
 }
 
 BOOST_AUTO_TEST_CASE(Brent) 
 {
-  //anpi::test::rootTest<float>(anpi::rootBrent<float>);
-  //anpi::test::rootTest<double>(anpi::rootBrent<double>);
+  anpi::test::rootTest<float>(anpi::rootBrent<float>);
+  anpi::test::rootTest<double>(anpi::rootBrent<double>);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
