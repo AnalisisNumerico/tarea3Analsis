@@ -14,6 +14,8 @@
 #include <RootSecant.hpp>
 #include <RootInterpolation.hpp>
 #include <RootBisection.hpp>
+#include <RootBrent.hpp>
+#include <RootNewtonRaphson.hpp>
 
 /**
  *
@@ -103,23 +105,23 @@ namespace anpi {
             anpi::Plot2d<T> plot2d;
             plot2d.initialize(1);
             plot2d.setTitle(pMetodo);
-            plot2d.setXLabel("Llamadas a funcion");
-            plot2d.setYLabel("Error");
-            plot2d.setGridSize(15);
-            plot2d.setYRange(0,15);
-            plot2d.setXRange(0,600);
+            plot2d.setYLabel("Llamadas a funcion");
+            plot2d.setXLabel("Error");
+            plot2d.setGridSize(10);
+            plot2d.setYRange(0,400);
+            plot2d.setXRange(0,8);
 
-/*
+
             plot2d.plot(pEjeError,pEje1,"1","g");
             plot2d.plot(pEjeError,pEje2,"2","r");
             plot2d.plot(pEjeError,pEje3,"3","b");
-*/
 
 
+/*
             plot2d.plot(pEje1,pEjeError,"F1","g");
             plot2d.plot(pEje2,pEjeError, "F2","r");
             plot2d.plot(pEje3,pEjeError, "F3","b");
-
+*/
             plot2d.show();
 
         }
@@ -189,17 +191,17 @@ namespace anpi {
             for (T eps=T(1)/T(10); eps>static_cast<T>(1.0e-7); eps/=T(2)) {
                 T sol = solver(t1<T>,T(0),eps);
                 T llamadas = T(capsulaF1.template target<Encapsuladora<T>>()->getCuenta());
-                BOOST_CHECK(std::abs(t1<T>(sol))<eps);
+                BOOST_CHECK(0 < llamadas);
                 _F1Llamadas.push_back(llamadas);
 
                 sol = solver(t2<T>,T(2),eps);
                 llamadas = T(capsulaF2.template target<Encapsuladora<T>>()->getCuenta());
-                BOOST_CHECK(std::abs(t2<T>(sol))<eps);
+                BOOST_CHECK(0 < llamadas);
                 _F2Llamadas.push_back(llamadas);
 
                 sol = solver(t3<T>,T(0),eps);
                 llamadas = T(capsulaF3.template target<Encapsuladora<T>>()->getCuenta());
-                BOOST_CHECK(std::abs(t3<T>(sol))<eps);
+                BOOST_CHECK(0 < llamadas);
                 _F3Llamadas.push_back(llamadas);
 
                 _error.push_back(eps*100);
@@ -232,14 +234,14 @@ BOOST_AUTO_TEST_SUITE( Bench )
 
     BOOST_AUTO_TEST_CASE(NewtonRaphson)
     {
-        //anpi::test::benchTest<float>(anpi::rootNewtonRaphson<float>, "Presicion simple Newton-Raphson");
-        //anpi::test::benchTest<double>(anpi::rootNewtonRaphson<double>, "Presicion doble Newton-Raphson");
+        anpi::bench::benchTest<float>(anpi::rootNewtonRaphson<float>, "Presicion simple Newton-Raphson");
+        anpi::bench::benchTest<double>(anpi::rootNewtonRaphson<double>, "Presicion doble Newton-Raphson");
     }
 
     BOOST_AUTO_TEST_CASE(Brent)
     {
-        //anpi::test::benchTest<float>(anpi::rootBrent<float>, "Presicion simple Brent");
-        //anpi::test::benchTest<double>(anpi::rootBrent<double>, "Presicion doble Brent");
+        anpi::bench::benchTest<float>(anpi::rootBrent<float>, "Presicion simple Brent");
+        anpi::bench::benchTest<double>(anpi::rootBrent<double>, "Presicion doble Brent");
     }
 
 BOOST_AUTO_TEST_SUITE_END()

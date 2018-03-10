@@ -1,3 +1,13 @@
+/**
+ * Copyright (C) 2018
+ * Área Académica de Ingeniería en Computadoras, ITCR, Costa Rica
+ *
+ * This file is part of the numerical analysis lecture CE3102 at TEC
+ *
+ * @Author: Pablo Alvarado
+ * @Date  : 10.02.2018
+ */
+
 #include <cmath>
 #include <limits>
 #include <functional>
@@ -9,12 +19,19 @@
 
 namespace anpi {
 
+    /** Returns the evaluated derivate of a given function
+     * by means of forward aproximation
+     *
+     *
+     * @param funct a functor of the form "T funct(T x)"
+     * @param value
+     * @return evalueted derivate aproximation
+     */
     template<typename T>
     T primeraDerivada(const std::function<T(T)>& funct, T x,T eps) {
-        const T h = eps/2;
-        return ((funct(x+h) - funct(x-h))/2*h);
+        const T h = std::abs(eps) / T(2);
+        return ((funct(x+h) - funct(x))/h);
     }
-
 
     /**
      * Find the roots of the function funct looking by means of the
@@ -31,21 +48,17 @@ namespace anpi {
     template<typename T>
     T rootNewtonRaphson(const std::function<T(T)>& funct,T xi,const T eps) {
 
-        T eps = eps/10;
+        int const MAX_ITERATIONS = 20;
 
-        double err, x1;
-        int it, maxit=100;
-        it=0;
-        err=eps+1;
-        while( err > eps && it < maxit )
-        {
-            x1 = xi - funct(xi)/(primeraDerivada(funct,xi,eps));
-            err=fabs(x1-xi);
-            xi=x1;
-            it++;
-        }
-        if( err <= eps ){
-            return xi;
+        T x = xi;
+        T dx;
+
+        for(int i = 0; i < MAX_ITERATIONS; i++) {
+            dx = ((funct(x))/(primeraDerivada(funct,x,eps)));
+            x = x - dx;
+            if(std::abs(dx) < eps) {
+                return x;
+            }
         }
 
         // Return NaN if no root was found
@@ -53,6 +66,5 @@ namespace anpi {
     }
 
 }
-
 
 #endif
